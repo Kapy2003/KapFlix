@@ -62,21 +62,24 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+          cache: 'gradle'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Download Web Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kapflix-web-dist
+          path: dist
 
-      - name: Install Node Dependencies
-        run: npm ci
-
-      - name: Build Web Bundle & Sync Android Assets
-        run: npm run build:android
+      - name: Sync Web Bundle into Android Assets
+        run: |
+          mkdir -p android/app/src/main/assets/public
+          cp -r dist/* android/app/src/main/assets/public/
 
       - name: Build Android Universal APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon || ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleRelease --no-daemon --stacktrace || ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Stage & Verify APK
         run: |

@@ -25,13 +25,18 @@ export const server = http.createServer((req, res) => {
   let pathname = decodeURIComponent(parsedUrl.pathname);
   if (pathname === "/") pathname = "/index.html";
 
-  // Prevent traversal
-  if (pathname.includes("..")) {
+  // Prevent directory traversal
+  const rawUrl = req.url || "";
+  if (rawUrl.includes("..") || rawUrl.toLowerCase().includes("%2e%2e") || pathname.includes("..")) {
     res.writeHead(403, { "Content-Type": "text/plain" });
     return res.end("Forbidden");
   }
 
-  const filePath = path.join(DIST_DIR, pathname);
+  const filePath = path.resolve(DIST_DIR, "." + pathname);
+  if (!filePath.startsWith(DIST_DIR)) {
+    res.writeHead(403, { "Content-Type": "text/plain" });
+    return res.end("Forbidden");
+  }
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {

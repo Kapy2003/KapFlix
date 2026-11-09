@@ -47,7 +47,7 @@ test("Stream URL generator for Movies", () => {
   );
 });
 
-test("Stream URL generator for TV & Anime with seasons and episodes", () => {
+test("Stream URL generator for TV Series with seasons and episodes", () => {
   assert.equal(
     getStreamUrl({ type: "tv", id: 1399, season: 2, episode: 5, server: "vidlink" }),
     "https://vidlink.pro/tv/1399/2/5"
@@ -71,4 +71,35 @@ test("Stream URL fallback to VidLink on unknown server", () => {
     getStreamUrl({ type: "movie", id: 100, server: "unknown" }),
     "https://vidlink.pro/movie/100"
   );
+});
+
+test("Production static server guards against path traversal", async () => {
+  process.env.NODE_ENV = "test";
+  const http = await import("node:http");
+  const { server } = await import("../server.js");
+  await new Promise((resolve) => server.listen(0, resolve));
+  const port = server.address().port;
+
+  try {
+    const status = await new Promise((resolve, reject) => {
+      const req = http.request({ host: "localhost", port, path: "/../package.json" }, (res) => {
+        resolve(res.statusCode);
+      });
+      req.on("error", reject);
+      req.end();
+    });
+    assert.equal(status, 403);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+test("OTA version manifest is valid and contains release metadata", async () => {
+  const fs = await import("node:fs");
+  const raw = fs.readFileSync("./public/version.json", "utf-8");
+  const data = JSON.parse(raw);
+
+  assert.ok(data.version, "version string required");
+  assert.ok(typeof data.build === "number", "build number required");
+  assert.ok(data.apkUrl && data.apkUrl.endsWith(".apk"), "apkUrl must point to .apk file");
 });

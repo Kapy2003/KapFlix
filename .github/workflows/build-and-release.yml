@@ -1,0 +1,131 @@
+name: KapFlix CI/CD — Web, Android Phone & Android TV Auto-Build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test-and-build-web:
+    name: 🌐 Test & Build Web App
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Stream & Security Tests
+        run: npm test
+
+      - name: Build Web Production Distribution
+        run: npm run build
+
+      - name: Upload Web Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kapflix-web-dist
+          path: dist/
+          retention-days: 14
+
+  build-android-apk:
+    name: 📱 Build Universal Android APK (Phone & TV)
+    needs: test-and-build-web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Build Web Bundle & Sync Android Assets
+        run: npm run build:android
+
+      - name: Build Android Universal APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon || ./gradlew assembleDebug --no-daemon
+
+      - name: Stage & Verify APK
+        run: |
+          APK_FILE=$(find android/app/build/outputs/apk/ -name "*.apk" | head -n 1)
+          if [ -z "$APK_FILE" ]; then
+            echo "::error::No APK was generated."
+            exit 1
+          fi
+          echo "Found generated APK: $APK_FILE"
+          cp "$APK_FILE" KapFlix-Universal-release.apk
+          ls -lh KapFlix-Universal-release.apk
+
+      - name: Upload Universal Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KapFlix-Universal-Android-APK
+          path: KapFlix-Universal-release.apk
+          retention-days: 30
+
+  publish-github-release:
+    name: 🚀 Publish GitHub Release with OTA APK
+    needs: [test-and-build-web, build-android-apk]
+    if: startsWith(github.ref, 'tags/v') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Web Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kapflix-web-dist
+          path: dist
+
+      - name: Download Android APK Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: KapFlix-Universal-Android-APK
+
+      - name: Package Web Distribution Archive
+        run: zip -r kapflix-web-bundle.zip dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            KapFlix-Universal-release.apk
+            kapflix-web-bundle.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true

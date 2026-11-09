@@ -1,8 +1,14 @@
-export type MediaType = "movie" | "tv" | "anime";
+export type MediaType = "movie" | "tv";
+
+export interface CastMember {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+}
 
 export interface MediaItem {
   id: number;
-  idMal?: number;
   type: MediaType;
   title: string;
   overview: string;
@@ -10,8 +16,13 @@ export interface MediaItem {
   backdrop_path: string | null;
   vote_average: number;
   release_date: string;
+  tagline?: string;
+  runtime?: number;
   genres?: Array<string | { id: number; name: string }>;
   adult?: boolean;
+  rank?: number;
+  matchScore?: number;
+  cast?: CastMember[];
   season?: number;
   episode?: number;
   totalEpisodes?: number;
@@ -34,6 +45,14 @@ export interface Season {
   episode_count: number;
 }
 
+export interface VideoTrailer {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+}
+
 export type StreamServer = "vidlink" | "vidsrc" | "embedsu" | "multiembed";
 
 export interface StreamParams {
@@ -53,4 +72,14 @@ export interface WatchHistoryItem {
   poster_path: string | null;
   backdrop_path: string | null;
   updatedAt: number;
+}
+
+export interface BrowseFilters {
+  type: MediaType;
+  service?: string;
+  studio?: string;
+  genre?: string;
+  year?: string;
+  rating?: number;
+  sortBy?: string;
 }

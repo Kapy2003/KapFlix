@@ -1,0 +1,7 @@
+{
+  "version": "1.0.1",
+  "build": 2,
+  "releaseDate": "2026-11-10",
+  "changelog": "Vivarium signature UI, full Android TV D-Pad support, and OTA hot-reloading",
+  "apkUrl": "https://github.com/USER/KapFlix/releases/latest/download/KapFlix-Universal-release.apk"
+}

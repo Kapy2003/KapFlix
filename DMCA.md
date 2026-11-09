@@ -7,7 +7,6 @@
 * **No Media Hosting:** KapFlix does not host, upload, archive, control, transmit, or maintain any video files, media streams, MP4/M3U8 files, torrents, or copyrighted audiovisual content on any server.
 * **Metadata Indexing:** Movie and TV show titles, posters, descriptions, and episode information are retrieved directly by the client browser from publicly accessible APIs:
   - [The Movie Database (TMDB)](https://www.themoviedb.org/) for movie and TV metadata.
-  - [AniList](https://anilist.co/) for anime metadata.
 * **Embedded Players:** Video playback is handled via third-party web embeds loaded inside client-side sandboxed iframes. These external players are neither owned, controlled, hosted, nor operated by KapFlix or its developers.
 
 ## 2. Copyright Infringement & Takedown Requests

@@ -60,13 +60,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search movies, TV series, anime..."
-          className="w-full bg-obsidian-surface1 border border-white/15 focus:border-white/35 text-white placeholder-white/40 text-lg px-14 py-4 rounded-full outline-none shadow-2xl transition"
+          placeholder="Search movies, TV series, actors..."
+          className="w-full viv-glass-pill text-white placeholder-white/40 text-base sm:text-lg px-14 py-3.5 rounded-full outline-none shadow-2xl transition"
         />
 
         <button
           onClick={onClose}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer"
+          className="absolute right-3.5 top-1/2 -translate-y-1/2 viv-round-btn !w-8 !h-8 text-xs cursor-pointer"
         >
           ✕
         </button>
@@ -76,11 +76,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
         {loading ? (
           <div className="text-center py-20 text-white/40">Searching catalog...</div>
         ) : results.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 pb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-12">
             {results.map(item => (
               <MediaCard
                 key={`${item.type}-${item.id}`}
                 item={item}
+                aspect="landscape"
                 onClick={() => {
                   onSelect(item);
                   onClose();
@@ -92,7 +93,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
           <div className="text-center py-20 text-white/40">No titles found for "{query}".</div>
         ) : (
           <div className="text-center py-20 text-white/30 text-sm">
-            Start typing to instantly search movies, shows, and anime.
+            Start typing to instantly search movies and television series.
           </div>
         )}
       </div>

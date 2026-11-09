@@ -33,5 +33,8 @@ Thumbs.db
 # Cross-platform / native build artifacts (Tauri / Android)
 src-tauri/target/
 .gradle/
+android/.gradle/
+android/app/build/
+android/build/
 build/
 *.apk

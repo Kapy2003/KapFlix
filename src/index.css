@@ -2,12 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: #080808;
+  --bg-rgb: 8, 8, 8;
+  --surface-1: #0f0f0f;
+  --surface-2: #151515;
+  --surface-3: #1c1c1c;
+  --primary: #e6e6e6;
+  --primary-hover: #ffffff;
+  --on-accent: #080808;
+  --accent: #e6e6e6;
+  --text: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.84);
+  --text-muted: rgba(255, 255, 255, 0.56);
+  --text-faint: rgba(255, 255, 255, 0.38);
+  --hairline: rgba(255, 255, 255, 0.1);
+  --fill-field: rgba(255, 255, 255, 0.045);
+  --fill-1: rgba(255, 255, 255, 0.07);
+  --fill-2: rgba(255, 255, 255, 0.12);
+  --fill-3: rgba(255, 255, 255, 0.18);
+  --radius-content: 14px;
+  --radius-float: 9999px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-base: 0.3s;
+  --poster-shadow: 0 14px 30px -16px rgba(0, 0, 0, 0.85);
+  --lift-2: 0 30px 70px -30px rgba(0, 0, 0, 0.9);
+}
+
 @layer base {
   html {
     color-scheme: dark;
-    background-color: #080808;
+    background-color: var(--bg);
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
+}
+
+/* Vivarium Signature Design Classes */
+.viv-glass-pill {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.viv-round-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.22s var(--ease-out);
+}
+.viv-round-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.viv-btn-hero {
+  background: var(--primary);
+  color: var(--on-accent);
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.75rem 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.22s var(--ease-out);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+}
+.viv-btn-hero:hover {
+  background: #ffffff;
+  transform: scale(1.02);
+  box-shadow: 0 6px 26px rgba(255, 255, 255, 0.28);
+}
+
+.viv-btn-glass {
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: var(--text);
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.75rem 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.22s var(--ease-out);
+}
+.viv-btn-glass:hover {
+  background: rgba(255, 255, 255, 0.17);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+}
+
+.viv-card-scrim {
+  background: linear-gradient(#0000 38%, rgba(0, 0, 0, 0.32) 64%, rgba(0, 0, 0, 0.95) 100%);
+}
+
+.viv-card {
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+.viv-card:hover {
+  transform: scale(1.03);
+  box-shadow: var(--poster-shadow);
+}
+
+/* Android TV & D-Pad High-Visibility Focus Ring */
+:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2.5px #ffffff, 0 0 28px rgba(255, 255, 255, 0.5) !important;
+  transform: scale(1.04) !important;
+  transition: transform 0.16s var(--ease-out), box-shadow 0.16s var(--ease-out) !important;
+  z-index: 30 !important;
 }
 
 /* Hide scrollbars for carousel tracks */
@@ -25,5 +143,5 @@
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeIn 0.25s var(--ease-out) forwards;
 }

@@ -29,33 +29,33 @@ export const CinemaPlayer: React.FC<CinemaPlayerProps> = ({
     server
   });
 
-  const isSeries = item.type === "tv" || item.type === "anime";
+  const isSeries = item.type === "tv";
 
   return (
     <div className="fixed inset-0 z-50 bg-[#040404] flex flex-col animate-fade-in">
       {/* Top Bar */}
-      <div className="h-14 px-4 sm:px-6 flex items-center justify-between bg-obsidian-surface1 border-b border-white/10 z-10 flex-none">
+      <div className="h-14 px-4 sm:px-6 flex items-center justify-between bg-obsidian-surface1/90 backdrop-blur-xl border-b border-white/10 z-10 flex-none">
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-sm sm:text-base font-bold text-white truncate max-w-xs sm:max-w-md">
             {item.title}
           </span>
           {isSeries && (
-            <span className="px-2 py-0.5 rounded bg-white/10 text-xs font-semibold text-white/80">
+            <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-xs font-semibold text-white/80">
               S{season} : E{episode}
             </span>
           )}
         </div>
 
         {/* Server Selector Tabs */}
-        <div className="hidden md:flex items-center gap-1.5">
+        <div className="hidden md:flex items-center gap-1 viv-glass-pill p-1 rounded-full">
           {(Object.keys(SERVERS) as StreamServer[]).map(sKey => (
             <button
               key={sKey}
               onClick={() => setServer(sKey)}
               className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
                 server === sKey
-                  ? "bg-white text-obsidian"
-                  : "bg-obsidian-surface2 hover:bg-obsidian-surface3 border border-white/5 text-white/60 hover:text-white"
+                  ? "bg-white text-obsidian shadow-sm"
+                  : "text-white/60 hover:text-white hover:bg-white/5"
               }`}
             >
               {SERVERS[sKey]}
@@ -87,7 +87,7 @@ export const CinemaPlayer: React.FC<CinemaPlayerProps> = ({
           <button
             onClick={onClose}
             aria-label="Close Player"
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer"
+            className="viv-round-btn !w-8 !h-8 text-xs cursor-pointer"
           >
             ✕
           </button>

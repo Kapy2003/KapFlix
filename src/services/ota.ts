@@ -8,7 +8,7 @@ export interface UpdateInfo {
   apkUrl?: string;
 }
 
-export const CURRENT_VERSION = "1.0.0";
+export const CURRENT_VERSION = "1.0.1";
 
 export const OtaService = {
   async checkForUpdates(): Promise<UpdateInfo | null> {

@@ -19,8 +19,6 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            // In GitHub Actions, signs with debug key if release keystore is not provided
             signingConfig signingConfigs.debug
         }
         debug {

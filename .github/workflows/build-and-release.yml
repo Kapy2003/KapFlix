@@ -102,7 +102,7 @@ jobs:
   publish-github-release:
     name: 🚀 Publish GitHub Release with OTA APK
     needs: [test-and-build-web, build-android-apk]
-    if: startsWith(github.ref, 'tags/v') || github.event_name == 'workflow_dispatch'
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     steps:
@@ -123,12 +123,14 @@ jobs:
       - name: Package Web Distribution Archive
         run: zip -r kapflix-web-bundle.zip dist/
 
-      - name: Create GitHub Release
+      - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ startsWith(github.ref, 'tags/v') && github.ref_name || 'latest' }}
+          name: ${{ startsWith(github.ref, 'tags/v') && github.ref_name || 'KapFlix Universal (Latest Build)' }}
           files: |
             KapFlix-Universal-release.apk
             kapflix-web-bundle.zip
           draft: false
-          prerelease: false
+          prerelease: ${{ !startsWith(github.ref, 'tags/v') }}
           generate_release_notes: true
